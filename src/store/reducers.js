@@ -8,7 +8,7 @@ import {
 
 export const defaultState = {
   auth: {
-    token: "",
+    token: null,
     saved: false,
   },
   ads: {
@@ -47,3 +47,5 @@ export function ads(adsState = defaultState.ads, action) {
       return adsState;
   }
 }
+
+

@@ -7,13 +7,14 @@ import storage from "./utils/storage";
 import "./index.css";
 import App from "./components/app";
 
-import store from "./store";
-
-const render = () => console.log(store.getState())
-render();
+import configureStore from "./store";
 
 const accessToken = storage.get("auth");
 configureClient({ accessToken });
+
+const store = configureStore({ auth: { token: accessToken, saved: !!accessToken} });
+
+console.log(store);
 
 ReactDOM.render(
   <React.StrictMode>
