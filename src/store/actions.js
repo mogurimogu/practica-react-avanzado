@@ -2,11 +2,9 @@ import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGIN_FAILURE,
-  AUTH_SAVE_SESSION,
   AUTH_LOGOUT,
   ADS_LOADED_SUCCESS,
   AD_CREATED_SUCCESS,
-  AD_LOADED_SUCCESS,
 } from "./types";
 
 //AUTH
@@ -29,13 +27,6 @@ export function authLoginFailure(error) {
     type: AUTH_LOGIN_FAILURE,
     error,
     payload: error,
-  };
-}
-
-export function authSaveSession() {
-  return {
-    type: AUTH_SAVE_SESSION,
-    saved: true,
   };
 }
 

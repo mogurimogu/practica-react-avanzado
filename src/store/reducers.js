@@ -1,6 +1,5 @@
 import {
   AUTH_LOGIN_SUCCESS,
-  AUTH_SAVE_SESSION,
   AUTH_LOGOUT,
   ADS_LOADED_SUCCESS,
   AD_CREATED_SUCCESS,
@@ -8,8 +7,8 @@ import {
 
 export const defaultState = {
   auth: {
+    logged: false,
     token: null,
-    saved: false,
   },
   ads: {
     loaded: false,
@@ -22,11 +21,9 @@ export const defaultState = {
 export function auth(authState = defaultState.auth, action) {
   switch (action.type) {
     case AUTH_LOGIN_SUCCESS:
-      return { token: action.payload }; //TODO Pasar token
-    case AUTH_SAVE_SESSION:
-      return { saved: true };
+      return { ...authState, logged: true, token: action.payload }; //TODO Pasar token
     case AUTH_LOGOUT:
-      return { token: "", saved: false };
+      return { ...authState, token: null, saved: false };
     default:
       return authState;
   }
