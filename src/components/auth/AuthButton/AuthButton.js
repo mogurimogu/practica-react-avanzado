@@ -1,23 +1,19 @@
 import { Link } from 'react-router-dom';
-import T from 'prop-types';
+import useStoreData from '../../../hooks/useStoreData';
+import useStoreAction from '../../../hooks/useStoreAction';
+import { getIsLogged } from '../../../store/selectors';
+import { authLogout } from '../../../store/actions';
 
 import { ConfirmationButton } from '../../common';
-import { AuthConsumer } from '../context';
-import { logout } from '../service';
-import useMutation from '../../../hooks/useMutation';
 
-const AuthButton = ({ handleLogout, isLogged }) => {
-  const mutation = useMutation(logout);
-
-  const handleLogoutConfirm = async () => {
-    await mutation.execute();
-    handleLogout();
-  };
+const AuthButton = () => {
+  const isLogged = useStoreData(getIsLogged)
+  const authLogoutAction = useStoreAction(authLogout)
 
   return isLogged ? (
     <ConfirmationButton
       confirmation="Are you sure?"
-      onConfirm={handleLogoutConfirm}
+      onConfirm={authLogoutAction}
     >
       Logout
     </ConfirmationButton>
@@ -25,18 +21,4 @@ const AuthButton = ({ handleLogout, isLogged }) => {
     <Link to="/login">Login</Link>
   );
 };
-
-AuthButton.propTypes = {
-  handleLogout: T.func.isRequired,
-  isLogged: T.bool,
-};
-
-AuthButton.defaultProps = {
-  isLogged: false,
-};
-
-const ConnectedAuthButton = props => (
-  <AuthConsumer>{auth => <AuthButton {...auth} {...props} />}</AuthConsumer>
-);
-
-export default ConnectedAuthButton;
+export default AuthButton;

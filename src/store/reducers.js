@@ -3,27 +3,29 @@ import {
   AUTH_LOGOUT,
   ADS_LOADED_SUCCESS,
   AD_CREATED_SUCCESS,
+  UI_RESET_ERROR,
+  ADS_LOADED_FAILURE,
 } from "./types";
 
 export const defaultState = {
-  auth: {
-    logged: false,
-    token: null,
-  },
+  auth: false,
   ads: {
     loaded: false,
-    filter: { name: "", price: [], sale: "all", tags: [] },
     data: [],
     tagList: [],
+  },
+  ui: {
+    loading: false,
+    error: null,
   },
 };
 
 export function auth(authState = defaultState.auth, action) {
   switch (action.type) {
     case AUTH_LOGIN_SUCCESS:
-      return { ...authState, logged: true, token: action.payload }; //TODO Pasar token
+      return true;
     case AUTH_LOGOUT:
-      return { ...authState, token: null, saved: false };
+      return false;
     default:
       return authState;
   }
@@ -35,14 +37,34 @@ export function ads(adsState = defaultState.ads, action) {
       return {
         ...adsState,
         loaded: true,
-        data: [...action.payload.data], //TODO recibir ADS
-        tagList: [...action.payload.tagList], //TODO recibir Tags
+        data: [...action.payload.data],
+        tagList: [...action.payload.tagList],
       };
+
+    case ADS_LOADED_FAILURE:
+      return { ...adsState, error:{status: true, description: action} };
+
     case AD_CREATED_SUCCESS:
-      return { ...adsState, data: [...adsState.data, action.payload] };
+      return { ...adsState, data: [...adsState.data, action.payload.error] };
+
     default:
       return adsState;
   }
 }
 
+export function ui(state = defaultState.ui, action) {
+  if (action.error) {
+    return { ...state, loading: false, error: action.payload };
+  }
+  if (/_REQUEST$/.test(action.type)) {
+    return { ...state, loading: true, error: null };
+  }
+  if (/_SUCCESS$/.test(action.type)) {
+    return { ...state, loading: false, error: null };
+  }
 
+  if (action.type === UI_RESET_ERROR) {
+    return { ...state, error: null };
+  }
+  return state;
+}

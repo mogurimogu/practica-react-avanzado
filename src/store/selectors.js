@@ -1,10 +1,12 @@
-// export const getIsLogged = state => state.auth;
+//Auth
+export const getIsLogged = state => state.auth;
 
-// export const getTweets = state =>
-//   state.tweets.data.sort((t1, t2) => t2.updatedAt.localeCompare(t1.updatedAt));
-// export const areTweetsLoaded = state => state.tweets.loaded;
+//Ads
+export const getAreAdsLoaded = state => state.ads.loaded
+export const getAds = state => state.ads.data
+export const getAdsTaglist = state => state.ads.getAdsTaglist
 
-// export const getUi = state => state.ui;
+//Ad
 
-// export const getTweet = (state, tweetId) =>
-//   state.tweets.data.find(tweet => tweet.id === Number(tweetId));
+//Ui
+export const getUi = state => state.ui;
