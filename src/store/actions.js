@@ -15,6 +15,7 @@ import {
   AD_DELETED_REQUEST,
   AD_DELETED_SUCCESS,
   AD_DELETED_FAILURE,
+  AD_CREATED_FAILURE,
 } from "./types";
 
 //AUTH
@@ -149,13 +150,30 @@ export const adLoaded = adId => {
 };
 
 
-export function adCreatedSuccess(data) {
+export function adCreatedSuccess(ad) {
   return {
     type: AD_CREATED_SUCCESS,
-    payload: {
-      data,
-    },
+    payload: ad
   };
+}
+
+export function adCreatedFailure(error){
+  return{
+    type: AD_CREATED_FAILURE,
+    payload: error
+  }
+}
+
+export function adCreated(data){
+  return async function(dispatch, getState, {api, history}){
+    try {
+      const ad = await api.adverts.createAdvert(data)
+      dispatch(adCreatedSuccess(ad))
+      history.push(`/adverts/${ad.id}`)
+    } catch (error) {
+      dispatch(adCreatedFailure(error))
+    }  
+  }
 }
 
 export function adDeletedRequest() {
@@ -183,7 +201,7 @@ export function adDeleted(adId) {
   return async function (dispatch, getState, { api, history }) {
     dispatch(adDeletedRequest());
     try {
-      await api.adverts.adDeleted(adId);
+      await api.adverts.deleteAdvert(adId);
       dispatch(adDeletedSuccess(adId));
       history.push(`/adverts`);
     } catch (error) {

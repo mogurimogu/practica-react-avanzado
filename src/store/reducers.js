@@ -1,3 +1,4 @@
+import { advert } from "../components/adverts/propTypes";
 import {
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGOUT,
@@ -6,6 +7,9 @@ import {
   UI_RESET_ERROR,
   ADS_LOADED_FAILURE,
   AD_LOADED_SUCCESS,
+  AD_DELETED_FAILURE,
+  AD_DELETED_SUCCESS,
+  AD_CREATED_FAILURE,
 } from "./types";
 
 export const defaultState = {
@@ -20,7 +24,6 @@ export const defaultState = {
     error: null,
   },
 };
-
 
 //Auth
 
@@ -48,13 +51,25 @@ export function ads(adsState = defaultState.ads, action) {
       };
 
     case ADS_LOADED_FAILURE:
-      return { ...adsState, error:{status: true, description: action} };
-
-    case AD_CREATED_SUCCESS:
-      return { ...adsState, data: [...adsState.data, action.payload.error] };
+      return { ...adsState, error: { status: true, description: action } };
 
     case AD_LOADED_SUCCESS:
       return { ...adsState, data: [...adsState.data, action.payload] };
+
+    case AD_DELETED_SUCCESS:
+      return {
+        ...adsState,
+        data: adsState.data.filter((advert) => advert.id !== action.payload),
+      };
+    case AD_DELETED_FAILURE:
+      return console.log(action.payload);
+
+    case AD_CREATED_SUCCESS:
+      return { ...adsState, data: [...adsState.data, action.payload] };
+
+    case AD_CREATED_FAILURE:
+      return console.log(action.payload);
+
     default:
       return adsState;
   }
