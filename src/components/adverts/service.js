@@ -13,7 +13,7 @@ export const getTags = () => {
 };
 
 export const getAdverts = () => {
-  return client.get(`${advertsPath}`);
+  return client.get(`${advertsPath}`).then(ads => ads.map(mapAdvert));
 };
 
 export const getAdvert = advertId => {

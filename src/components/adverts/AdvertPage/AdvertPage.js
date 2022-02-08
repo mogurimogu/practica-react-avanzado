@@ -1,33 +1,25 @@
-import React from 'react';
-import { Redirect, useParams, useHistory } from 'react-router-dom';
+import React from "react";
+import { useParams } from "react-router-dom";
+import useStoreAction from "../../../hooks/useStoreAction";
+import useStoreData from "../../../hooks/useStoreData";
+import { adDeleted, adLoaded } from "../../../store/actions";
+import { getAd } from "../../../store/selectors";
 
-import Layout from '../../layout';
-import AdvertDetail from './AdvertDetail';
-import { getAdvert, deleteAdvert } from '../service';
-import useQuery from '../../../hooks/useQuery';
-import useMutation from '../../../hooks/useMutation';
+import Layout from "../../layout";
+import AdvertDetail from "./AdvertDetail";
 
 function AdvertPage() {
   const { advertId } = useParams();
-  const history = useHistory();
-  const getAdvertById = React.useCallback(
-    () => getAdvert(advertId),
-    [advertId],
-  );
-  const { isLoading, error, data: advert } = useQuery(getAdvertById);
-  const mutation = useMutation(deleteAdvert);
-
+  const loadAdAction = useStoreAction(adLoaded);
+  const deleteAdAction = useStoreAction(adDeleted);
+  const advert = useStoreData(state => getAd(state, advertId))
   const handleDelete = () => {
-    mutation.execute(advertId).then(() => history.push('/'));
-  };
-
-  if (error?.statusCode === 401 || mutation.error?.statusCode === 401) {
-    return <Redirect to="/login" />;
+    deleteAdAction(advertId)
   }
 
-  if (error?.statusCode === 404) {
-    return <Redirect to="/404" />;
-  }
+  React.useEffect(() => {
+    loadAdAction(advertId);
+  }, [loadAdAction, advertId]);
 
   return (
     <Layout>

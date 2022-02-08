@@ -1,4 +1,4 @@
-import { getAreAdsLoaded } from "./selectors";
+import { getAd, getAreAdsLoaded } from "./selectors";
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
@@ -9,6 +9,12 @@ import {
   AD_CREATED_SUCCESS,
   UI_RESET_ERROR,
   ADS_LOADED_FAILURE,
+  AD_LOADED_SUCCESS,
+  AD_LOADED_FAILURE,
+  AD_LOADED_REQUEST,
+  AD_DELETED_REQUEST,
+  AD_DELETED_SUCCESS,
+  AD_DELETED_FAILURE,
 } from "./types";
 
 //AUTH
@@ -75,7 +81,7 @@ export function adsLoadedSuccess(data, tags) {
     type: ADS_LOADED_SUCCESS,
     payload: {
       data,
-      tagList: tags
+      tagList: tags,
     },
   };
 }
@@ -104,6 +110,45 @@ export function adsLoaded() {
   };
 }
 
+//AD
+
+export function adLoadedRequest() {
+  return {
+    type: AD_LOADED_REQUEST,
+  };
+}
+
+export function adLoadedSuccess(ad) {
+  return {
+    type: AD_LOADED_SUCCESS,
+    payload: ad
+  };
+}
+
+export function adLoadedFailure(error) {
+  return {
+    type: AD_LOADED_FAILURE,
+    error: true,
+    payload: error,
+  };
+}
+
+export const adLoaded = adId => {
+  return async function (dispatch, getState, { api }) {
+    if (getAd(getState(), adId)) {
+      return;
+    }
+    dispatch(adLoadedRequest());
+    try {
+      const ad = await api.adverts.getAdvert(adId);
+      dispatch(adLoadedSuccess(ad));
+    } catch (error) {
+      dispatch(adLoadedFailure(error));
+    }
+  };
+};
+
+
 export function adCreatedSuccess(data) {
   return {
     type: AD_CREATED_SUCCESS,
@@ -113,6 +158,41 @@ export function adCreatedSuccess(data) {
   };
 }
 
+export function adDeletedRequest() {
+  return {
+    type: AD_DELETED_REQUEST,
+  };
+}
+
+export function adDeletedSuccess(ad) {
+  return {
+    type: AD_DELETED_SUCCESS,
+    payload: ad,
+  };
+}
+
+export function adDeletedFailure(error) {
+  return {
+    type: AD_DELETED_FAILURE,
+    error: true,
+    payload: error,
+  };
+}
+
+export function adDeleted(adId) {
+  return async function (dispatch, getState, { api, history }) {
+    dispatch(adDeletedRequest());
+    try {
+      await api.adverts.adDeleted(adId);
+      dispatch(adDeletedSuccess(adId));
+      history.push(`/adverts`);
+    } catch (error) {
+      dispatch(adDeletedFailure(error));
+    }
+  };
+}
+
+//UI
 export function uiResetError() {
   return {
     type: UI_RESET_ERROR,
