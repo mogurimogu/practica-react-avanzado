@@ -4,7 +4,7 @@ export const getIsLogged = (state) => state.auth;
 //Ads
 export const getAreAdsLoaded = (state) => state.ads.loaded;
 export const getAds = (state) => state.ads.data;
-export const getAdsTaglist = (state) => state.ads.getAdsTaglist;
+export const getAdsTaglist = (state) => state.ads.tagList;
 
 //Ad
 export const getAd = (state, advertId) => 

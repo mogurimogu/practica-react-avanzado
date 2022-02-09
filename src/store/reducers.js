@@ -1,4 +1,3 @@
-import { advert } from "../components/adverts/propTypes";
 import {
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGOUT,

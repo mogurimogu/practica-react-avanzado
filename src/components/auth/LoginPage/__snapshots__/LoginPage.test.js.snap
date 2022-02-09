@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginPage snapshot 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <input
+      name="email"
+      onChange={[Function]}
+      value=""
+    />
+    <input
+      name="password"
+      onChange={[Function]}
+      type="password"
+      value=""
+    />
+    <input
+      checked={false}
+      name="remember"
+      onChange={[Function]}
+      type="checkbox"
+    />
+    <button
+      disabled={true}
+    >
+      Login
+    </button>
+  </form>
+</div>
+`;
